@@ -370,6 +370,7 @@ local function reload_ui()  -- update the display, and save the file
 end
 
 local function load_UI(name)  -- open/create a ui file
+	local _
 	current_ui_file = name
 	modstorage:set_string("_GUI_editor_selected_file", current_ui_file)
 	_, widgets = pcall(loadstring("return "..modstorage:get_string("_GUI_editor_file_"..current_ui_file)))
