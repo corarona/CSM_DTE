@@ -77,6 +77,25 @@ minetest.register_on_mods_loaded(function()  -- update for newer API specs
 
 end)  -- add whatever functions don't work after startup to here (if possible)
 
+----------
+-- FILE READING AND SAVING
+----------
+
+local function load_lua()  -- returns the contents of the file currently being edited
+	if saved_file == false then
+		return modstorage:get_string("_lua_temp")  -- unsaved files are remembered  (get saved on UI reloads - when clicking on buttons)
+	else
+		return modstorage:get_string("_lua_file_"..saved_file)
+	end
+end
+
+local function save_lua(code)  -- save a file
+	if saved_file == false then
+		modstorage:set_string("_lua_temp", code)
+	else
+		modstorage:set_string("_lua_file_"..saved_file, code)
+	end
+end
 
 ----------
 -- FUNCTIONS FOR UI
@@ -159,25 +178,8 @@ end
 
 on_startup()
 
-
-----------
--- FILE READING AND SAVING
-----------
-
-local function load_lua()  -- returns the contents of the file currently being edited
-	if saved_file == false then
-		return modstorage:get_string("_lua_temp")  -- unsaved files are remembered  (get saved on UI reloads - when clicking on buttons)
-	else
-		return modstorage:get_string("_lua_file_"..saved_file)
-	end
-end
-
-local function save_lua(code)  -- save a file
-	if saved_file == false then
-		modstorage:set_string("_lua_temp", code)
-	else
-		modstorage:set_string("_lua_file_"..saved_file, code)
-	end
+if core.register_cheat then
+	core.register_cheat("Run DTE", "DevTools", function() run(load_lua()) end)
 end
 
 
