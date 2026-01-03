@@ -3,7 +3,7 @@ local data = {  -- window size
 	height = 10,
 
 }
-local form_esc = minetest.formspec_escape  -- shorten the function
+local F = minetest.formspec_escape  -- shorten the function
 
 local modstorage = core.get_mod_storage()
 
@@ -192,12 +192,12 @@ local function startup_form()  -- the formspec for adding or removing files for 
 	local startup_str = ""
 	for i, v in pairs(lua_startup) do
 		if i ~= 1 then startup_str = startup_str.."," end
-		startup_str = startup_str .. form_esc(v)
+		startup_str = startup_str .. F(v)
 	end
 	local files_str = ""
 	for i, v in pairs(lua_files) do
 		if i ~= 1 then files_str = files_str.."," end
-		files_str = files_str .. form_esc(v)
+		files_str = files_str .. F(v)
 	end
 
 	local form = ""..
@@ -218,10 +218,10 @@ local function lua_editor()  -- the main formspec for editing
 	local output_str = ""  --  convert the output to a string
 	for i, v in pairs(output) do
 		if output_str:len() > 0 then output_str = output_str .. "," end
-		output_str = output_str .. form_esc(v)
+		output_str = output_str .. F(v)
 	end
 
-	local code = form_esc(load_lua())
+	local code = F(load_lua())
 
 	-- create the form
 	local form = ""..
@@ -241,13 +241,13 @@ local function file_viewer()  -- created with the formspec editor!
 	local lua_files_item_str = ""
 	for i, item in pairs(lua_files) do
 		if i ~= 1 then lua_files_item_str = lua_files_item_str.."," end
-		lua_files_item_str = lua_files_item_str .. form_esc(item)
+		lua_files_item_str = lua_files_item_str .. F(item)
 	end
 
 	local ui_select_item_str = ""
 	for i, item in pairs(ui_files) do
 		if i ~= 1 then ui_select_item_str = ui_select_item_str.."," end
-		ui_select_item_str = ui_select_item_str .. form_esc(item)
+		ui_select_item_str = ui_select_item_str .. F(item)
 	end
 
 	local form = "" ..
@@ -512,36 +512,36 @@ local function generate_ui()
 		elseif v.type == "Button" then
 			if v.image then  -- image option
 				if v.item and not v.exit then
-					form = form .. "item_image_button["..get_rect(v)..form_esc(v.texture)..";"..i.."_none;"..form_esc(v.label).."]"
+					form = form .. "item_image_button["..get_rect(v)..F(v.texture)..";"..i.."_none;"..F(v.label).."]"
 				else
-					form = form .. "image_button["..get_rect(v)..form_esc(v.texture)..";"..i.."_none;"..form_esc(v.label).."]"
+					form = form .. "image_button["..get_rect(v)..F(v.texture)..";"..i.."_none;"..F(v.label).."]"
 				end
 			else
-				form = form .. "button["..get_rect(v)..i.."_none;"..form_esc(v.label).."]"
+				form = form .. "button["..get_rect(v)..i.."_none;"..F(v.label).."]"
 			end
 
 		elseif v.type == "Field" then
 			if v.password then  -- password option
-				form = form .. "pwdfield["..get_rect(v)..i.."_none;"..form_esc(v.label).."]"
+				form = form .. "pwdfield["..get_rect(v)..i.."_none;"..F(v.label).."]"
 			else
-				form = form .. "field["..get_rect(v)..i.."_none;"..form_esc(v.label)..";"..form_esc(v.default).."]"
+				form = form .. "field["..get_rect(v)..i.."_none;"..F(v.label)..";"..F(v.default).."]"
 			end
 			form = form .. "field_close_on_enter["..i.."_none;false]"
 
 		elseif v.type == "TextArea" then
-			form = form .. "textarea["..get_rect(v)..i.."_none;"..form_esc(v.label)..";"..form_esc(v.default).."]"
+			form = form .. "textarea["..get_rect(v)..i.."_none;"..F(v.label)..";"..F(v.default).."]"
 
 		elseif v.type == "Label" then
 			if v.vertical then  -- vertical option
-				form = form .. "vertlabel["..get_rect(v)..form_esc(v.label).."]"
+				form = form .. "vertlabel["..get_rect(v)..F(v.label).."]"
 			else
-				form = form .. "label["..get_rect(v)..form_esc(v.label).."]"
+				form = form .. "label["..get_rect(v)..F(v.label).."]"
 			end
 
 		elseif v.type == "TextList" then
 			local item_str = ""  -- convert the list to a sting
 			for i, item in pairs(v.items) do
-				item_str = item_str .. form_esc(item)..","
+				item_str = item_str .. F(item)..","
 			end
 			if v.transparent then  -- transparent option
 				form = form .. "textlist["..get_rect(v)..i.."_none;"..item_str..";1;True]"
@@ -552,7 +552,7 @@ local function generate_ui()
 		elseif v.type == "DropDown" then
 			local item_str = ""  -- convert the list to a string
 			for i, item in pairs(v.items) do
-				item_str = item_str .. form_esc(item)..","
+				item_str = item_str .. F(item)..","
 			end
 			form = form .. "dropdown["..get_rect(v)..i.."_none;"..item_str..";"..v.select_id.."]"
 
@@ -560,19 +560,19 @@ local function generate_ui()
 			form = form .. "checkbox["..get_rect(v)..i.."_none;"..v.label..";"..tostring(v.checked).."]"
 
 		elseif v.type == "Box" then  -- a colored square
-			form = form .. "box["..get_rect(v)..form_esc(v.color).."]"
+			form = form .. "box["..get_rect(v)..F(v.color).."]"
 
 		elseif v.type == "Image" then
 			if v.item then
-				form = form .. "item_image["..get_rect(v)..form_esc(v.image).."]"
+				form = form .. "item_image["..get_rect(v)..F(v.image).."]"
 			elseif v.background then
 				if v.fill then
-					form = form .. "background["..left[1]-0.18 ..","..top[1]-0.22 ..";"..fwidth[1]+0.37 ..","..fheight[1]+0.7 ..";"..form_esc(v.image).."]"
+					form = form .. "background["..left[1]-0.18 ..","..top[1]-0.22 ..";"..fwidth[1]+0.37 ..","..fheight[1]+0.7 ..";"..F(v.image).."]"
 				else
-					form = form .. "background["..get_rect(v)..form_esc(v.image).."]"
+					form = form .. "background["..get_rect(v)..F(v.image).."]"
 				end
 			else
-				form = form .. "image["..get_rect(v)..form_esc(v.image).."]"
+				form = form .. "image["..get_rect(v)..F(v.image).."]"
 			end
 
 		elseif v.type == "Slider" then
@@ -585,14 +585,14 @@ local function generate_ui()
 		elseif v.type == "InvList" then
 			local extras = {["player:"]=1, ["nodemeta:"]=1, ["detached:"]=1}  -- locations that need extra info (v.data)
 			if extras[v.location] then
-				form = form .. "list["..v.location..form_esc(v.data)..";"..form_esc(v.name)..";"..get_rect(v)..v.start.."]"
+				form = form .. "list["..v.location..F(v.data)..";"..F(v.name)..";"..get_rect(v)..v.start.."]"
 				if v.ring then  -- items can be shift clicked between ring items
-					form = form .. "listring["..v.location..form_esc(v.data)..";"..form_esc(v.name).."]"
+					form = form .. "listring["..v.location..F(v.data)..";"..F(v.name).."]"
 				end
 			else
-				form = form .. "list["..v.location..";"..form_esc(v.name)..";"..get_rect(v)..v.start.."]"
+				form = form .. "list["..v.location..";"..F(v.name)..";"..get_rect(v)..v.start.."]"
 				if v.ring then
-					form = form .. "listring["..v.location..";"..form_esc(v.name).."]"
+					form = form .. "listring["..v.location..";"..F(v.name).."]"
 				end
 			end
 
@@ -612,7 +612,7 @@ local function generate_ui()
 				column_str = column_str .. c.type  -- add column types
 				if c.type == "image" then  -- add list of available images
 					for n, t in pairs(c.images) do
-						column_str = column_str..","..n .."="..form_esc(t)
+						column_str = column_str..","..n .."="..F(t)
 					end
 				elseif c.type == "color" and c.distance ~= "infinite" then  -- add distance that colors affect
 					column_str = column_str..",span="..c.distance
@@ -627,7 +627,7 @@ local function generate_ui()
 					if item == nil then  -- blank item if this column doesn't extend as far
 						item = ""
 					end
-					cell_str = cell_str..form_esc(item)
+					cell_str = cell_str..F(item)
 				end
 			end
 			if column_str:len() > 0 then
@@ -660,7 +660,7 @@ local function generate_ui()
 			local capt_str = ""
 			for i, capt in pairs(v.captions) do
 				if i > 1 then capt_str = capt_str.."," end
-				capt_str = capt_str .. form_esc(capt)
+				capt_str = capt_str .. F(capt)
 			end
 			form = form .. "tabheader["..get_rect(v)..i.."_none;"..capt_str..";"..v.tab..";"..tostring(v.transparent)..";"..tostring(v.border).."]"
 
@@ -1003,40 +1003,40 @@ local function generate_function()
 					table.insert(parameters, name(v).."_image")
 					tex = '"..'..name(v)..'_image.."'
 				else
-					tex = form_esc(v.texture)
+					tex = F(v.texture)
 				end
 				if v.item and not v.exit then  -- quit on click
-					table.insert(display, '"item_image_button['..get_rect(v)..';'..tex..';'..form_esc(v.name)..';'..form_esc(v.label)..']"')
+					table.insert(display, '"item_image_button['..get_rect(v)..';'..tex..';'..F(v.name)..';'..F(v.label)..']"')
 				else
 					if v.exit then  -- quit on click - image
-						table.insert(display, '"image_button_exit['..get_rect(v)..';'..tex..';'..form_esc(v.name)..';'..form_esc(v.label)..']"')
+						table.insert(display, '"image_button_exit['..get_rect(v)..';'..tex..';'..F(v.name)..';'..F(v.label)..']"')
 					else  -- normal image
-						table.insert(display, '"image_button['..get_rect(v)..';'..tex..';'..form_esc(v.name)..';'..form_esc(v.label)..']"')
+						table.insert(display, '"image_button['..get_rect(v)..';'..tex..';'..F(v.name)..';'..F(v.label)..']"')
 					end
 				end
 			else
 				if v.exit then  -- quit on click
-					table.insert(display, '"button_exit['..get_rect(v)..';'..form_esc(v.name)..';'..form_esc(v.label)..']"')
+					table.insert(display, '"button_exit['..get_rect(v)..';'..F(v.name)..';'..F(v.label)..']"')
 				else  -- basic button
-					table.insert(display, '"button['..get_rect(v)..';'..form_esc(v.name)..';'..form_esc(v.label)..']"')
+					table.insert(display, '"button['..get_rect(v)..';'..F(v.name)..';'..F(v.label)..']"')
 				end
 			end
 
 		elseif v.type == "Field" then
 			if v.password then  -- password field
-				table.insert(display, '"pwdfield['..get_rect(v)..';'..form_esc(v.name)..';'..form_esc(v.label)..']"')
+				table.insert(display, '"pwdfield['..get_rect(v)..';'..F(v.name)..';'..F(v.label)..']"')
 			else
 				local default = ""
 				if v.default_param then  -- default param
 					table.insert(parameters, name(v).."_default")
 					default = '"..minetest.formspec_escape('..name(v)..'_default).."'
 				else
-					default = form_esc(v.default)
+					default = F(v.default)
 				end
-				table.insert(display, '"field['..get_rect(v)..';'..form_esc(v.name)..';'..form_esc(v.label)..';'..default..']"')
+				table.insert(display, '"field['..get_rect(v)..';'..F(v.name)..';'..F(v.label)..';'..default..']"')
 			end
 			if v.enter_close == false then
-				table.insert(display, '"field_close_on_enter['..form_esc(v.name)..';false]"')
+				table.insert(display, '"field_close_on_enter['..F(v.name)..';false]"')
 			end
 
 		elseif v.type == "TextArea" then
@@ -1045,12 +1045,12 @@ local function generate_function()
 				table.insert(parameters, name(v).."_default")
 				default = '"..minetest.formspec_escape('..name(v)..'_default).."'
 			else
-				default = form_esc(v.default)
+				default = F(v.default)
 			end
-			table.insert(display, '"textarea['..get_rect(v)..';'..form_esc(v.name)..';'..form_esc(v.label)..';'..form_esc(default)..']"')
+			table.insert(display, '"textarea['..get_rect(v)..';'..F(v.name)..';'..F(v.label)..';'..F(default)..']"')
 
 		elseif v.type == "Label" then
-			local label = form_esc(v.label)
+			local label = F(v.label)
 			if v.label_param then
 				table.insert(parameters, name(v).."_label")
 				label = '"..minetest.formspec_escape('..name(v)..'_label).."'
@@ -1076,18 +1076,18 @@ local function generate_function()
 				items = ""
 				for i, item in pairs(v.items) do
 					if i ~= 1 then items = items.."," end
-					items = items .. form_esc(item)
+					items = items .. F(item)
 				end
 			end
 			if v.item_id_param or v.transparent then
 				if v.item_id_param then  -- selected item parameter
 					table.insert(parameters, name(v).."_selected_item")
-					table.insert(display, '"textlist['.. get_rect(v)..';'..form_esc(v.name)..';'..items..';"..'..name(v)..'_selected_item..";'..tostring(v.transparent)..']"')
+					table.insert(display, '"textlist['.. get_rect(v)..';'..F(v.name)..';'..items..';"..'..name(v)..'_selected_item..";'..tostring(v.transparent)..']"')
 				else
-					table.insert(display, '"textlist['..get_rect(v)..';'..form_esc(v.name)..';'..items..';1;'..tostring(v.transparent)..']"')
+					table.insert(display, '"textlist['..get_rect(v)..';'..F(v.name)..';'..items..';1;'..tostring(v.transparent)..']"')
 				end
 			else
-				table.insert(display, '"textlist['..get_rect(v)..';'..form_esc(v.name)..';'..items..']"')
+				table.insert(display, '"textlist['..get_rect(v)..';'..F(v.name)..';'..items..']"')
 			end
 
 		elseif v.type == "DropDown" then
@@ -1105,7 +1105,7 @@ local function generate_function()
 				items = ""
 				for i, item in pairs(v.items) do
 					if i ~= 1 then items = items.."," end
-					items = items .. form_esc(item)
+					items = items .. F(item)
 				end
 			end
 			local item_id = ""
@@ -1115,7 +1115,7 @@ local function generate_function()
 			else
 				item_id = tostring(v.select_id)
 			end
-			table.insert(display, '"dropdown['..get_rect(v)..';'..form_esc(v.name)..';'..items..';'..item_id..']"')
+			table.insert(display, '"dropdown['..get_rect(v)..';'..F(v.name)..';'..items..';'..item_id..']"')
 
 		elseif v.type == "CheckBox" then
 			local checked = tostring(v.checked)
@@ -1123,10 +1123,10 @@ local function generate_function()
 				table.insert(parameters, name(v).."_checked")
 				checked = '"..tostring('..name(v)..'_checked).."'
 			end
-			table.insert(display, '"checkbox['..get_rect(v)..';'..form_esc(v.name)..";"..form_esc(v.label)..';'..checked..']"')
+			table.insert(display, '"checkbox['..get_rect(v)..';'..F(v.name)..";"..F(v.label)..';'..checked..']"')
 
 		elseif v.type == "Box" then
-			local color = form_esc(v.color)
+			local color = F(v.color)
 			if v.color_param then
 				table.insert(parameters, name(v).."_color")
 				color = '"..'..name(v)..'_color.."'
@@ -1134,7 +1134,7 @@ local function generate_function()
 			table.insert(display, '"box['..get_rect(v)..';'..color..']"')
 
 		elseif v.type == "Image" then
-			local image = form_esc(v.image)
+			local image = F(v.image)
 			if v.image_param then  -- texture
 				table.insert(parameters, name(v).."_image")
 				image = '"..'..name(v)..'_image.."'
@@ -1148,7 +1148,7 @@ local function generate_function()
 			end
 
 		elseif v.type == "Slider" then
-			local value = form_esc(v.value)
+			local value = F(v.value)
 			if v.value_param then
 				table.insert(parameters, name(v).."_value")
 				value = '"..'..name(v)..'_value.."'
@@ -1157,7 +1157,7 @@ local function generate_function()
 			if v.vertical then
 				orientation = "vertical"
 			end
-			table.insert(display, '"scrollbar['..get_rect(v)..';'..orientation..";"..form_esc(v.name)..";"..value..']"')
+			table.insert(display, '"scrollbar['..get_rect(v)..';'..orientation..";"..F(v.name)..";"..value..']"')
 
 		elseif v.type == "InvList" then
 			local extras = {["player:"]=1, ["nodemeta:"]=1, ["detached:"]=1}
@@ -1166,16 +1166,16 @@ local function generate_function()
 				table.insert(parameters, name(v).."_data")
 				data = '"..minetest.formspec_escape('..name(v)..'_data).."'
 			elseif extras[v.location] then
-				data = form_esc(v.data)
+				data = F(v.data)
 			end
 			local start = v.start
 			if v.page_param then
 				table.insert(parameters, name(v).."_start_idx")
 				start = '"..'..name(v)..'_start_idx.."'
 			end
-			table.insert(display, '"list['..v.location..data..';'..form_esc(v.name)..';'..get_rect(v)..';'..start..']"')
+			table.insert(display, '"list['..v.location..data..';'..F(v.name)..';'..get_rect(v)..';'..start..']"')
 			if v.ring then  -- shift clicking between item lists
-				table.insert(display, '"listring['..v.location..data..';'..form_esc(v.name)..']"')
+				table.insert(display, '"listring['..v.location..data..';'..F(v.name)..']"')
 			end
 
 		elseif v.type == "Table" then
@@ -1251,13 +1251,13 @@ local function generate_function()
 				table.insert(parameters, name(v).."_selected_item")
 				selected = '"..'..name(v)..'_selected_item.."'
 			end
-			table.insert(display, '"table['..get_rect(v)..";"..form_esc(v.name)..';'..cell_str..';'..selected..']"')
+			table.insert(display, '"table['..get_rect(v)..";"..F(v.name)..';'..cell_str..';'..selected..']"')
 
 		elseif v.type == "Tooltip" then
 			if v.colors then
-				table.insert(display, '"tooltip['..form_esc(v.name)..';'..form_esc(v.text)..';'..form_esc(v.bg)..';'..form_esc(v.fg)..']"')
+				table.insert(display, '"tooltip['..F(v.name)..';'..F(v.text)..';'..F(v.bg)..';'..F(v.fg)..']"')
 			else
-				table.insert(display, '"tooltip['..form_esc(v.name)..';'..form_esc(v.text)..']"')
+				table.insert(display, '"tooltip['..F(v.name)..';'..F(v.text)..']"')
 			end
 
 		elseif v.type == "Container - Start" then  -- container has 2 sections
@@ -1298,9 +1298,9 @@ local function generate_function()
 			local capt_str = ""
 			for i, capt in pairs(v.captions) do
 				if i > 1 then capt_str = capt_str.."," end
-				capt_str = capt_str .. form_esc(capt)
+				capt_str = capt_str .. F(capt)
 			end
-			table.insert(display, '"tabheader['..get_rect(v)..';'..form_esc(v.name)..';'..capt_str..';'..v.tab..';'.. tostring(v.transparent)..';'..tostring(v.border)..']"')
+			table.insert(display, '"tabheader['..get_rect(v)..';'..F(v.name)..';'..capt_str..';'..v.tab..';'.. tostring(v.transparent)..';'..tostring(v.border)..']"')
 
 		end
 	end
@@ -1441,7 +1441,7 @@ local function generate_string()
 
 		elseif v.type == "Button" then
 			if v.image then
-				local ending = get_rect(v)..form_esc(v.texture)..";"..form_esc(v.name)..";"..form_esc(v.label).."]\" ..\n"
+				local ending = get_rect(v)..F(v.texture)..";"..F(v.name)..";"..F(v.label).."]\" ..\n"
 				if v.item and not v.exit then
 					output = output .. "\"item_image_button["..ending
 				else
@@ -1453,63 +1453,63 @@ local function generate_string()
 				end
 			else
 				if v.exit then
-					output = output .. "\"button_exit["..get_rect(v)..form_esc(v.name)..";"..form_esc(v.label).."]\" ..\n"
+					output = output .. "\"button_exit["..get_rect(v)..F(v.name)..";"..F(v.label).."]\" ..\n"
 				else
-					output = output .. "\"button["..get_rect(v)..form_esc(v.name)..";"..form_esc(v.label).."]\" ..\n"
+					output = output .. "\"button["..get_rect(v)..F(v.name)..";"..F(v.label).."]\" ..\n"
 				end
 			end
 
 		elseif v.type == "Field" then
 			if v.password then
-				output = output .. "\"pwdfield["..get_rect(v)..form_esc(v.name)..";"..form_esc(v.label).."]\" ..\n"
+				output = output .. "\"pwdfield["..get_rect(v)..F(v.name)..";"..F(v.label).."]\" ..\n"
 			else
-				output = output .. "\"field["..get_rect(v)..form_esc(v.name)..";"..form_esc(v.label)..";"..form_esc(v.default).."]\" ..\n"
+				output = output .. "\"field["..get_rect(v)..F(v.name)..";"..F(v.label)..";"..F(v.default).."]\" ..\n"
 			end
 			if v.enter_close == false then
-				output = output .. "\"field_close_on_enter["..form_esc(v.name)..";false]\" ..\n"
+				output = output .. "\"field_close_on_enter["..F(v.name)..";false]\" ..\n"
 			end
 
 		elseif v.type == "TextArea" then
-			output = output .. "\"textarea["..get_rect(v)..form_esc(v.name)..";"..form_esc(v.label)..";"..form_esc(v.default).."]\" ..\n"
+			output = output .. "\"textarea["..get_rect(v)..F(v.name)..";"..F(v.label)..";"..F(v.default).."]\" ..\n"
 
 		elseif v.type == "Label" then
 			if v.vertical then
-				output = output .. "\"vertlabel["..get_rect(v)..form_esc(v.label).."]\" ..\n"
+				output = output .. "\"vertlabel["..get_rect(v)..F(v.label).."]\" ..\n"
 			else
-				output = output .. "\"label["..get_rect(v)..form_esc(v.label).."]\" ..\n"
+				output = output .. "\"label["..get_rect(v)..F(v.label).."]\" ..\n"
 			end
 
 		elseif v.type == "TextList" then
 			local item_str = ""
 			for i, item in pairs(v.items) do
-				item_str = item_str .. form_esc(item)..","
+				item_str = item_str .. F(item)..","
 			end
 			if not v.transparent then
-				output = output .. "\"textlist["..get_rect(v)..form_esc(v.name)..";"..item_str:sub(0,-2).."]\" ..\n"
+				output = output .. "\"textlist["..get_rect(v)..F(v.name)..";"..item_str:sub(0,-2).."]\" ..\n"
 			else
-				output = output .. "\"textlist["..get_rect(v)..form_esc(v.name)..";"..item_str:sub(0,-2)..";1;true]\" ..\n"
+				output = output .. "\"textlist["..get_rect(v)..F(v.name)..";"..item_str:sub(0,-2)..";1;true]\" ..\n"
 			end
 
 		elseif v.type == "DropDown" then
 			local item_str = ""
 			for i, item in pairs(v.items) do
-				item_str = item_str .. form_esc(item)..","
+				item_str = item_str .. F(item)..","
 			end
-			output = output .. "\"dropdown["..get_rect(v)..form_esc(v.name)..";"..item_str:sub(0,-2)..";"..v.select_id.."]\" ..\n"
+			output = output .. "\"dropdown["..get_rect(v)..F(v.name)..";"..item_str:sub(0,-2)..";"..v.select_id.."]\" ..\n"
 
 		elseif v.type == "CheckBox" then
-			output = output .. "\"checkbox["..get_rect(v)..form_esc(v.name)..";"..form_esc(v.label)..";"..tostring(v.checked).."]\" ..\n"
+			output = output .. "\"checkbox["..get_rect(v)..F(v.name)..";"..F(v.label)..";"..tostring(v.checked).."]\" ..\n"
 
 		elseif v.type == "Box" then
-			output = output .. "\"box["..get_rect(v)..form_esc(v.color).."]\" ..\n"
+			output = output .. "\"box["..get_rect(v)..F(v.color).."]\" ..\n"
 
 		elseif v.type == "Image" then
 			if v.item then
-				output = output .. "\"item_image["..get_rect(v)..form_esc(v.image).."]\" ..\n"
+				output = output .. "\"item_image["..get_rect(v)..F(v.image).."]\" ..\n"
 			elseif v.background then
-				output = output .. "\"background["..get_rect(v)..form_esc(v.image)..";"..tostring(v.fill).."]\" ..\n"
+				output = output .. "\"background["..get_rect(v)..F(v.image)..";"..tostring(v.fill).."]\" ..\n"
 			else
-				output = output .. "\"image["..get_rect(v)..form_esc(v.image).."]\" ..\n"
+				output = output .. "\"image["..get_rect(v)..F(v.image).."]\" ..\n"
 			end
 
 		elseif v.type == "Slider" then
@@ -1517,19 +1517,19 @@ local function generate_string()
 			if v.vertical then
 				orientation = "vertical"
 			end
-			output = output .. "\"scrollbar["..get_rect(v)..orientation..";"..form_esc(v.name)..";"..v.value.."]\" ..\n"
+			output = output .. "\"scrollbar["..get_rect(v)..orientation..";"..F(v.name)..";"..v.value.."]\" ..\n"
 
 		elseif v.type == "InvList" then
 			local extras = {["player:"]=1, ["nodemeta:"]=1, ["detached:"]=1}
 			if extras[v.location] then
-				output = output .. "\"list["..v.location..form_esc(v.data)..";"..form_esc(v.name)..";"..get_rect(v)..v.start.."]\" ..\n"
+				output = output .. "\"list["..v.location..F(v.data)..";"..F(v.name)..";"..get_rect(v)..v.start.."]\" ..\n"
 				if v.ring then
-					output = output .. "\"listring["..v.location..form_esc(v.data)..";"..form_esc(v.name).."]\" ..\n"
+					output = output .. "\"listring["..v.location..F(v.data)..";"..F(v.name).."]\" ..\n"
 				end
 			else
-				output = output .. "\"list["..v.location..";"..form_esc(v.name)..";"..get_rect(v)..v.start.."]\" ..\n"
+				output = output .. "\"list["..v.location..";"..F(v.name)..";"..get_rect(v)..v.start.."]\" ..\n"
 				if v.ring then
-					output = output .. "\"listring["..v.location..";"..form_esc(v.name).."]\" ..\n"
+					output = output .. "\"listring["..v.location..";"..F(v.name).."]\" ..\n"
 				end
 			end
 
@@ -1572,13 +1572,13 @@ local function generate_string()
 			if column_str:len() > 0 then
 				output = output .. "\"tablecolumns["..column_str.."]\" ..\n"
 			end
-			output = output .. "\"table["..get_rect(v)..form_esc(v.name)..";"..cell_str..";]\" ..\n"
+			output = output .. "\"table["..get_rect(v)..F(v.name)..";"..cell_str..";]\" ..\n"
 
 		elseif v.type == "Tooltip" then
 			if v.colors then
-				output = output .. "\"tooltip["..form_esc(v.name)..";"..form_esc(v.text)..";"..form_esc(v.bg)..";"..form_esc(v.fg).."]\" ..\n"
+				output = output .. "\"tooltip["..F(v.name)..";"..F(v.text)..";"..F(v.bg)..";"..F(v.fg).."]\" ..\n"
 			else
-				output = output .. "\"tooltip["..form_esc(v.name)..";"..form_esc(v.text).."]\" ..\n"
+				output = output .. "\"tooltip["..F(v.name)..";"..F(v.text).."]\" ..\n"
 			end
 
 
@@ -1596,9 +1596,9 @@ local function generate_string()
 			local capt_str = ""
 			for i, capt in pairs(v.captions) do
 				if i > 1 then capt_str = capt_str.."," end
-				capt_str = capt_str .. form_esc(capt)
+				capt_str = capt_str .. F(capt)
 			end
-			output = output .. "\"tabheader["..get_rect(v)..form_esc(v.name)..";"..capt_str..";"..v.tab..";"..tostring(v.transparent)..";"..tostring(v.border).."]\" ..\n"
+			output = output .. "\"tabheader["..get_rect(v)..F(v.name)..";"..capt_str..";"..v.tab..";"..tostring(v.transparent)..";"..tostring(v.border).."]\" ..\n"
 		end
 	end
 	return output .. '""'
@@ -1610,11 +1610,11 @@ end
 
 -- creates a position chooser with << and >> buttons, text box, and position type (if needed)
 local function ui_position(name, value, left, top, typ, typ_id)
-	name = form_esc(name)
+	name = F(name)
 	local form = ""..
 	"label["..left+0.1 ..","..top-0.3 ..";"..name.."]" ..
 	"button["..left+0.1 ..","..top..";1,1;"..name.."_size_down;<<]" ..
-	"field["..left+1.3 ..","..top+0.3 ..";1,1;"..name.."_size;;"..form_esc(value).."]" ..
+	"field["..left+1.3 ..","..top+0.3 ..";1,1;"..name.."_size;;"..F(value).."]" ..
 	"field_close_on_enter["..name.."_size;false]" ..
 	"button["..left+1.9 ..","..top..";1,1;"..name.."_size_up;>>]"
 	local typ_ids = {["L+"]=1, ["T+"]=1, ["R-"]=2, ["B-"]=2, ["W/"]=3, ["H/"]=3, ["R"]=4}
@@ -1675,9 +1675,9 @@ end
 
 -- creates a field to edit name or other attributes, and a parameter checkbox (if needed)
 local function ui_field(name, value, left, top, param)
-	name = form_esc(name)
+	name = F(name)
 	local field = "" ..
-	"field["..left+0.2 ..","..top..";2.8,1;"..name.."_input_box;"..name..";"..form_esc(value).."]" ..
+	"field["..left+0.2 ..","..top..";2.8,1;"..name.."_input_box;"..name..";"..F(value).."]" ..
 	"field_close_on_enter["..name.."_input_box;false]"
 	if param ~= nil then
 		field = field .. "checkbox["..left+2.8 ..","..top-0.3 ..";"..name.."_param_box;parameter;"..tostring(param).."]"
@@ -1932,7 +1932,7 @@ local widget_editor_uis = {
 
 			local item_str = ""
 			for i, v in pairs(widgets[id].items) do
-				item_str = item_str .. form_esc(v) .. ","
+				item_str = item_str .. F(v) .. ","
 			end
 
 			local form = "label["..left+1.8 ..","..top ..";-  TextList  -]" ..
@@ -1981,7 +1981,7 @@ local widget_editor_uis = {
 
 			local item_str = ""
 			for i, v in pairs(widgets[id].items) do
-				item_str = item_str .. form_esc(v) .. ","
+				item_str = item_str .. F(v) .. ","
 			end
 
 			local form = "label["..left+1.8 ..","..top ..";-  DropDown  -]" ..
@@ -2153,7 +2153,7 @@ local widget_editor_uis = {
 
 			local extras = {["player:"]=1, ["nodemeta:"]=1, ["detached:"]=1}  -- these locations need extra data
 			if extras[widgets[id].location] then
-				form = form .. "field["..left+3.3 ..","..top+5 ..";1.7,1;data;DATA;"..form_esc(widgets[id].data).."]" ..
+				form = form .. "field["..left+3.3 ..","..top+5 ..";1.7,1;data;DATA;"..F(widgets[id].data).."]" ..
 				"field_close_on_enter[data;false]" ..
 				"checkbox["..left+3 ..","..top+5.5 ..";data_box;data param;"..tostring(widgets[id].data_param).."]"
 			end
@@ -2191,9 +2191,9 @@ local widget_editor_uis = {
 			""
 
 			if widgets[id].colors then
-				form = form .. "field["..left+0.4 ..","..top+3 ..";2.8,1;bg;BACKGROUND;"..form_esc(widgets[id].bg).."]" ..
+				form = form .. "field["..left+0.4 ..","..top+3 ..";2.8,1;bg;BACKGROUND;"..F(widgets[id].bg).."]" ..
 				"field_close_on_enter[bg;false]" ..
-				"field["..left+0.4 ..","..top+4 ..";2.8,1;fg;TEXT COLOUR;"..form_esc(widgets[id].fg).."]" ..
+				"field["..left+0.4 ..","..top+4 ..";2.8,1;fg;TEXT COLOUR;"..F(widgets[id].fg).."]" ..
 				"field_close_on_enter[fg;false]" ..
 				"checkbox["..left+0.12 ..","..top+4.4 ..";col_box;colors;true]"
 			else
@@ -2433,7 +2433,7 @@ local widget_editor_uis = {
 				end
 				pos = pos-1
 			end
-			local form = "label["..left+0.1 ..","..top+1 ..";-  End of Container \""..form_esc(name).."\"  -]" ..
+			local form = "label["..left+0.1 ..","..top+1 ..";-  End of Container \""..F(name).."\"  -]" ..
 
 			""
 
@@ -2447,7 +2447,7 @@ local widget_editor_uis = {
 		ui =function(id, left, top, width)
 			local item_str = ""
 			for i, v in pairs(widgets[id].captions) do
-				item_str = item_str .. form_esc(v) .. ","
+				item_str = item_str .. F(v) .. ","
 			end
 
 			local form = "label["..left+1.9 ..","..top ..";-  Tabs  -]" ..
@@ -2501,12 +2501,12 @@ local widget_editor_uis = {
 			if fields.string_create then  -- display the formspec to output the generated string (and generate it)
 				minetest.show_formspec("ui_editor:output",
 				"size[10,8]" ..
-				"textarea[1,1;9,7;_;Generated Code;"..form_esc(generate_string()).."]" ..
+				"textarea[1,1;9,7;_;Generated Code;"..F(generate_string()).."]" ..
 				"button[8.8,0;1,1;back;back]")
 			elseif fields.func_create then  -- display the (same) formspec to output the generated function (and generate it)
 				minetest.show_formspec("ui_editor:output",
 				"size[10,8]" ..
-				"textarea[1,1;9,7;_;Generated Code;"..form_esc(generate_function()).."]" ..
+				"textarea[1,1;9,7;_;Generated Code;"..F(generate_function()).."]" ..
 				"button[8.8,0;1,1;back;back]")
 			end
 		end
@@ -2724,7 +2724,7 @@ local function widget_chooser(left)
 		if v.type == "Container - End" then  -- the order of end and start are because they do not need indenting
 			depth = depth-1
 		end
-		widget_str = widget_str .. string.rep("- ", depth) .. form_esc(v.type .. ":	" .. v.name) .. ","
+		widget_str = widget_str .. string.rep("- ", depth) .. F(v.type .. ":	" .. v.name) .. ","
 		if v.type == "Container - Start" then  -- container contents gets indented
 			depth = depth+1
 		end
@@ -2733,8 +2733,8 @@ local function widget_chooser(left)
 	local form = ""..
 
 	"textlist["..left+0.1 ..",0.1;3.4,2;widg_select;"..widget_str..";"..selected_widget+4 .."]" ..
-	"button["..left+3.6 ..",0.1;0.5,1;widg_mov_up;"..form_esc("/\\").."]" ..
-	"button["..left+3.6 ..",1.2;0.5,1;widg_mov_dwn;"..form_esc("\\/").."]"
+	"button["..left+3.6 ..",0.1;0.5,1;widg_mov_up;"..F("/\\").."]" ..
+	"button["..left+3.6 ..",1.2;0.5,1;widg_mov_dwn;"..F("\\/").."]"
 
 	if selected_widget > 1 and selected_widget <= #widgets and widgets[selected_widget].type ~= "Container - End" then
 		form = form .. "button["..left+4 ..",0;1,1;widg_duplicate;DUPLICATE]" ..
